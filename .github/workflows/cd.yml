@@ -14,7 +14,7 @@ concurrency:
 
 defaults:
   run:
-    working-directory: "${{ GITHUB_WORKSPACE }}/tf"
+    working-directory: "${{ github.workspace }}/tf"
 
 env:
   VAULT_ADDR: "https://localhost:8200"
