@@ -1,0 +1,21 @@
+---
+version: '3'
+
+networks:
+  vault:
+    name: vault
+
+services:
+
+  vault:
+    networks:
+      vault:
+        aliases:
+          - vault
+    image: vault:1.8.3
+    cap_add:
+      - IPC_LOCK
+    ports:
+      - "8200:8200"
+    environment:
+      - VAULT_DEV_ROOT_TOKEN_ID=${VAULT_TOKEN}

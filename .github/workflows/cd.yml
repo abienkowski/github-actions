@@ -1,28 +1,23 @@
 name: Deploy App
 on:
-  pull_request:
-    type: [opened, reopened, synchronize]
-  push:
-    branches:
-      - master
-    tags:
-      - v\d+\.\d+\.\d+
+  workflow_run:
+    workflows: ["Build and Lint", "Deloy Vault"]
+    types: [requested]
 
 concurrency: 
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-defaults:
-  run:
-    working-directory: "${{ env.GITHUB_WORKSPACE }}/tf"
-
 env:
-  VAULT_ADDR: "http://localhost:8201"
+  VAULT_ADDR: "https://localhost:8200"
 
 jobs:
 
   deploy-app:
-    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: "${{ github.workspace }}/tf"
+    runs-on: ubuntu-22.04
 
     steps:
       - uses: actions/checkout@v3
@@ -33,10 +28,14 @@ jobs:
         run: |
           terraform init
 
-      - id: validate
-        run: |
-          terraform validate --no-color
-
       - id: plan
         run: |
-          terraform plan --no-color
+          terraform plan -no-color
+
+      - id: apply
+        run: |
+          terraform apply -auto-approve -no-color ${{ steps.plan.outputs.stdout }}
+
+      - run: |
+          terraform show
+          docker ps
