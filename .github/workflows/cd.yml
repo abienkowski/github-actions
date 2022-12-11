@@ -1,12 +1,8 @@
 name: Deploy App
 on:
-  pull_request:
-    type: [opened, reopened, synchronize]
-  push:
-    branches:
-      - master
-    tags:
-      - v\d+\.\d+\.\d+
+  workflow_run:
+    workflows: ["Deloy Vault"]
+    types: [requested]
 
 concurrency: 
   group: ${{ github.workflow }}-${{ github.ref }}
