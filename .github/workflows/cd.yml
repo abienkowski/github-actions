@@ -1,5 +1,6 @@
 name: Deploy App
 on:
+  workflow_call:
   workflow_run:
     workflows: ["Build and Lint", "Deloy Vault"]
     types: [requested]
@@ -20,6 +21,7 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
+      - uses: ./.github/workflows/vault.yml
       - uses: actions/checkout@v3
 
       - uses: hashicorp/setup-terraform@v2

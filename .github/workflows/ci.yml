@@ -4,7 +4,7 @@ on:
     type: [opened, reopened, synchronize]
   push:
     branches:
-      - master
+      - main
     tags:
       - v\d+\.\d+\.\d+
 
