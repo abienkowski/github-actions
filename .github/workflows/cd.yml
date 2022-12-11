@@ -42,7 +42,8 @@ jobs:
 
       - id: apply
         run: |
-          terraform apply -auto-appove -no-color
+          terraform apply -auto-approve -no-color ${{ steps.plan.outputs.stdout }}
 
       - run: |
-        docker ps
+          terraform show
+          docker ps
