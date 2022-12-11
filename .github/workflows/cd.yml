@@ -12,16 +12,15 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-defaults:
-  run:
-    working-directory: "${{ github.workspace }}/tf"
-
 env:
   VAULT_ADDR: "https://localhost:8200"
 
 jobs:
 
   deploy-app:
+    defaults:
+      run:
+        working-directory: "${{ github.workspace }}/tf"
     runs-on: ubuntu-latest
 
     steps:
