@@ -1,16 +1,16 @@
 variable "vault_addr" {
   type = string
-  default = env.VAULT_ADDR
+  default = "https://localhost:8081"
 }
 
 variable "network" {
   type = string
-  default = env.DOCKER_NETWORK
+  default = "vault"
 }
 
 variable "env_context" {
   type = string
-  default = env.ENV_CONTEXT
+  default = "dev"
 }
 
 variable "frontend_port" {
