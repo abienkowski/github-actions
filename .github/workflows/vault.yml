@@ -30,7 +30,7 @@ jobs:
         with:
           cli-args: "up -d"
 
-      - uses: innovationnorway/setup-vault@v1
+      - uses: eLco/setup-vault@v1
         with:
           vault_version: 1.8.7
 
