@@ -14,10 +14,10 @@ concurrency:
 
 defaults:
   run:
-    working-directory: "${{ env.GITHUB_WORKSPACE }}/tf"
+    working-directory: "${{ GITHUB_WORKSPACE }}/tf"
 
 env:
-  VAULT_ADDR: "http://localhost:8201"
+  VAULT_ADDR: "https://localhost:8200"
 
 jobs:
 
