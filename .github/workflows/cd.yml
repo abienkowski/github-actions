@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-      - uses: abienkowski/github-action/.github/workflows/vault.yml
+      - uses: ./.github/workflows/vault.yml
       - uses: actions/checkout@v3
 
       - uses: hashicorp/setup-terraform@v2
