@@ -34,8 +34,8 @@ jobs:
 
       - id: validate
         run: |
-          terraform validate --no-color
+          terraform validate -no-color
 
       - id: plan
         run: |
-          terraform plan --no-color
+          terraform plan -no-color
