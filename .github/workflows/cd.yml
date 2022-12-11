@@ -1,7 +1,7 @@
 name: Deploy App
 on:
   workflow_run:
-    workflows: ["Deloy Vault"]
+    workflows: ["Build and Lint", "Deloy Vault"]
     types: [requested]
 
 concurrency: 
@@ -17,7 +17,7 @@ jobs:
     defaults:
       run:
         working-directory: "${{ github.workspace }}/tf"
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
       - uses: actions/checkout@v3
@@ -27,10 +27,6 @@ jobs:
       - id: init
         run: |
           terraform init
-
-      - id: validate
-        run: |
-          terraform validate -no-color
 
       - id: plan
         run: |
