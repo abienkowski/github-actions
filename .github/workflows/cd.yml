@@ -3,7 +3,6 @@ on:
   workflow_run:
     workflows: ["Build and Lint", "Deploy Vault"]
     types: [requested]
-  workflow_call:
 
 concurrency: 
   group: ${{ github.workflow }}-${{ github.ref }}

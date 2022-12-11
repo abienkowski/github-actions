@@ -1,5 +1,8 @@
 name: Deploy Vault
-on: [push]
+on:
+  pull_request:
+    type: [opened, reopened, synchronize]
+  workflow_call:
 
 env:
   VAULT_ADDR: "http://localhost:8200"
