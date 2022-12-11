@@ -39,3 +39,10 @@ jobs:
       - id: plan
         run: |
           terraform plan -no-color
+
+      - id: apply
+        run: |
+          terraform apply -auto-appove -no-color
+
+      - run: |
+        docker ps
