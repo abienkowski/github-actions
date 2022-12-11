@@ -8,7 +8,7 @@ variable "network" {
   default = "vault"
 }
 
-variable "env_context" {
+variable "environment" {
   type = string
   default = "dev"
 }
