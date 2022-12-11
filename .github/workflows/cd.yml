@@ -5,7 +5,7 @@ on:
     types: [requested]
 
 concurrency: 
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: cd-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 env:
