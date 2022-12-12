@@ -40,6 +40,8 @@ jobs:
       - name: debug
         run: |
           docker ps
+          docker images
+          docker network ls
           docker logs workspace-vault-1
 
       - name: check vault secrets
