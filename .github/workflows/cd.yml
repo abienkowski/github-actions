@@ -14,7 +14,8 @@ env:
 jobs:
 
   deploy-vault:
-      uses: ./.github/workflows/vault.yml
+    uses: ./.github/workflows/vault.yml
+    secrets: inherit
 
   deploy-app:
     needs: [deploy-vault]
