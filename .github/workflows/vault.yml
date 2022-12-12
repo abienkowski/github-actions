@@ -21,7 +21,7 @@ jobs:
       - name: set env
         shell: bash
         run: |
-         if [ ${GITHUB_REF##*/} = "master" ]; then
+         if [ ${GITHUB_REF##*/} = "main" ]; then
            echo "VAULT_TOKEN=${{ secrets.STAGING_VAULT_ROOT_TOKEN }}" >> $GITHUB_ENV
          elif [[ ${GITHUB_REF##*/} =~ ^v[0-9]+\.[0-9]+\.[0-9] ]]; then
            echo "VAULT_TOKEN=${{ secrets.PROD_VAULT_ROOT_TOKEN }}" >> $GITHUB_ENV
