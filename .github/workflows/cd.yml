@@ -51,22 +51,23 @@ jobs:
 
       - uses: hashicorp/setup-terraform@v2
 
-      - id: init
+      - name: init
         working-directory: tf
         run: |
           terraform init
 
-      - id: plan
+      - name: plan
         working-directory: tf
         run: |
           terraform plan -no-color -out=/tmp/tfplan.tfplan
 
-      - id: apply
+      - name: apply
         working-directory: tf
         run: |
           terraform apply -auto-approve -no-color /tmp/tfplan.tfplan
 
-      - run: |
+      - name: debug
+        run: |
         working-directory: tf
           terraform show
           docker ps
