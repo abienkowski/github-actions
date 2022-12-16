@@ -1,0 +1,29 @@
+name: Lint
+on:
+  workflow_call:
+
+concurrency: 
+  group: lint-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+
+  lint:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: hashicorp/setup-terraform@v2
+
+      - id: init
+        run: |
+          terraform init
+
+      - id: validate
+        run: |
+          terraform validate -no-color
+
+      - id: plan
+        run: |
+          terraform plan -no-color

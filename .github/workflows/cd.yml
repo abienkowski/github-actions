@@ -1,11 +1,10 @@
 name: Deploy App
 on:
-  workflow_run:
-    workflows: ["Build and Lint"]
-    types: [requested]
+  pull_request:
+    types: [opened, reopened, synchronize]
 
 concurrency: 
-  group: cd-${{ github.workflow }}-${{ github.ref }}
+  group: cd-${{ github.ref }}
   cancel-in-progress: true
 
 env:
@@ -14,15 +13,45 @@ env:
 jobs:
 
   deploy-vault:
-    uses: ./.github/workflows/vault.yml
-    secrets: inherit
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: set env
+        shell: bash
+        run: |
+         if [ ${GITHUB_REF##*/} = "main" ]; then
+           echo "VAULT_TOKEN=${{ secrets.STAGING_VAULT_ROOT_TOKEN }}" >> $GITHUB_ENV
+         elif [[ ${GITHUB_REF##*/} =~ ^v[0-9]+\.[0-9]+\.[0-9] ]]; then
+           echo "VAULT_TOKEN=${{ secrets.PROD_VAULT_ROOT_TOKEN }}" >> $GITHUB_ENV
+         else
+           echo "VAULT_TOKEN=${{secrets.DEV_VAULT_ROOT_TOKEN}}" >> $GITHUB_ENV
+         fi
+      - name: deploy vault instance
+        uses: sudo-bot/action-docker-compose@latest
+        with:
+          cli-args: "up -d"
+
+      - uses: eLco/setup-vault@v1
+        with:
+          vault_version: 1.8.7
+
+      - name: debug
+        run: |
+          docker ps
+          docker images
+          docker network ls
+          docker logs workspace-vault-1
+
+      - name: check vault secrets
+        run: |
+          vault secrets list
 
   deploy-app:
     needs: [deploy-vault]
+    runs-on: ubuntu-22.04
     defaults:
       run:
-        working-directory: "${{ github.workspace }}/tf"
-    runs-on: ubuntu-22.04
+        working-directory: "tf"
 
     steps:
       - uses: actions/checkout@v3

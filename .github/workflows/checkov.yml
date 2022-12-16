@@ -1,0 +1,25 @@
+name: Checkov
+on:
+  workflow_call:
+
+concurrency: 
+  group: checkov-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+
+  checkov:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v3
+
+      - uses: bridgecrewio/checkov-action@v12
+        name: scan-terraform
+        with:
+          directory: tf/
+          framework: terraform
+          output_format: github_failed_only
+          download_external_modules: true
+
