@@ -14,9 +14,6 @@ jobs:
 
   deploy-app:
     runs-on: ubuntu-22.04
-    defaults:
-      run:
-        working-directory: "tf"
 
     steps:
       - name: set env
@@ -29,7 +26,9 @@ jobs:
          else
            echo "VAULT_TOKEN=${{secrets.DEV_VAULT_ROOT_TOKEN}}" >> $GITHUB_ENV
          fi
+
       - uses: actions/checkout@v3
+
       - name: deploy vault instance
         uses: sudo-bot/action-docker-compose@latest
         with:
@@ -53,17 +52,21 @@ jobs:
       - uses: hashicorp/setup-terraform@v2
 
       - id: init
+        working-directory: tf
         run: |
           terraform init
 
       - id: plan
+        working-directory: tf
         run: |
           terraform plan -no-color
 
       - id: apply
+        working-directory: tf
         run: |
           terraform apply -auto-approve -no-color ${{ steps.plan.outputs.stdout }}
 
       - run: |
+        working-directory: tf
           terraform show
           docker ps
