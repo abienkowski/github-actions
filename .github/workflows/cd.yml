@@ -67,7 +67,7 @@ jobs:
           terraform apply -auto-approve -no-color /tmp/tfplan.tfplan
 
       - name: debug
-        run: |
         working-directory: tf
+        run: |
           terraform show
           docker ps
