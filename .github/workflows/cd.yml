@@ -26,6 +26,7 @@ jobs:
          else
            echo "VAULT_TOKEN=${{secrets.DEV_VAULT_ROOT_TOKEN}}" >> $GITHUB_ENV
          fi
+      - uses: actions/checkout@v3
       - name: deploy vault instance
         uses: sudo-bot/action-docker-compose@latest
         with:
