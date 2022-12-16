@@ -1,8 +1,9 @@
+---
 name: Checkov
 on:
   workflow_call:
 
-concurrency: 
+concurrency:
   group: checkov-${{ github.ref }}
   cancel-in-progress: true
 
@@ -22,4 +23,3 @@ jobs:
           framework: terraform
           output_format: github_failed_only
           download_external_modules: true
-

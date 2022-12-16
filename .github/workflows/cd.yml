@@ -59,12 +59,12 @@ jobs:
       - id: plan
         working-directory: tf
         run: |
-          terraform plan -no-color
+          terraform plan -no-color -out=/tmp/tfplan.tfplan
 
       - id: apply
         working-directory: tf
         run: |
-          echo "${{ steps.plan.outputs.stdout }}" | terraform apply -auto-approve -no-color -
+          terraform apply -auto-approve -no-color /tmp/tfplan.tfplan
 
       - run: |
         working-directory: tf

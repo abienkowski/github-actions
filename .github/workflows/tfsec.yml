@@ -1,11 +1,12 @@
+---
 name: tfsec
 
 on:
   workflow_call:
 
 jobs:
+
   tfsec:
-    name: tfsec sarif report
     runs-on: ubuntu-22.04
     permissions:
       actions: read

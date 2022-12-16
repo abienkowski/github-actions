@@ -1,8 +1,9 @@
+---
 name: Lint
 on:
   workflow_call:
 
-concurrency: 
+concurrency:
   group: lint-${{ github.ref }}
   cancel-in-progress: true
 
