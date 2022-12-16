@@ -22,3 +22,10 @@ jobs:
       run:
         working-directory: "tf"
     uses: "./.github/workflows/lint.yml"
+
+  checkov:
+    defaults:
+      run:
+        working-directory: "tf"
+    uses: "./.github/workflows/tfsec.yml"
+
