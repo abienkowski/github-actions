@@ -64,7 +64,7 @@ jobs:
       - id: apply
         working-directory: tf
         run: |
-          terraform apply -auto-approve -no-color '${{ steps.plan.outputs.stdout }}'
+          echo "${{ steps.plan.outputs.stdout }}" | terraform apply -auto-approve -no-color -
 
       - run: |
         working-directory: tf
