@@ -8,6 +8,9 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  defaults:
+    run:
+      working-directory: "tf"
 
   lint:
     runs-on: ubuntu-22.04

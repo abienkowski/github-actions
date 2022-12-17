@@ -5,6 +5,9 @@ on:
   workflow_call:
 
 jobs:
+  defaults:
+    run:
+      working-directory: "tf"
 
   tfsec:
     runs-on: ubuntu-22.04

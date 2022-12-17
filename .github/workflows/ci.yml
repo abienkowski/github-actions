@@ -1,3 +1,4 @@
+---
 name: CI Pipeline
 on:
   pull_request:
@@ -8,7 +9,7 @@ on:
     tags:
       - v\d+\.\d+\.\d+
 
-concurrency: 
+concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
@@ -18,14 +19,7 @@ jobs:
     uses: "./.github/workflows/checkov.yml"
 
   lint:
-    defaults:
-      run:
-        working-directory: "tf"
     uses: "./.github/workflows/lint.yml"
 
-  checkov:
-    defaults:
-      run:
-        working-directory: "tf"
+  tfsec:
     uses: "./.github/workflows/tfsec.yml"
-
