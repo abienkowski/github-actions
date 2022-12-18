@@ -9,8 +9,6 @@ on:
     tags:
       - v\d+\.\d+\.\d+
 
-permissions: {}
-
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
