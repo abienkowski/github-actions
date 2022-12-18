@@ -1,52 +1,73 @@
 name: Deploy App
 on:
-  workflow_run:
-    workflows: ["Build and Lint"]
-    types: [requested]
+  pull_request:
+    types: [opened, reopened, synchronize]
 
 concurrency: 
-  group: cd-${{ github.workflow }}-${{ github.ref }}
+  group: cd-${{ github.ref }}
   cancel-in-progress: true
 
 env:
-  VAULT_ADDR: "https://localhost:8200"
+  VAULT_ADDR: "http://localhost:8200"
 
 jobs:
 
-  deploy-vault:
-    uses: ./.github/workflows/vault.yml
-    secrets: inherit
-
   deploy-app:
-    needs: [deploy-vault]
-    defaults:
-      run:
-        working-directory: "${{ github.workspace }}/tf"
     runs-on: ubuntu-22.04
 
     steps:
+      - name: set env
+        shell: bash
+        run: |
+         if [ ${GITHUB_REF##*/} = "main" ]; then
+           echo "VAULT_TOKEN=${{ secrets.STAGING_VAULT_ROOT_TOKEN }}" >> $GITHUB_ENV
+         elif [[ ${GITHUB_REF##*/} =~ ^v[0-9]+\.[0-9]+\.[0-9] ]]; then
+           echo "VAULT_TOKEN=${{ secrets.PROD_VAULT_ROOT_TOKEN }}" >> $GITHUB_ENV
+         else
+           echo "VAULT_TOKEN=${{secrets.DEV_VAULT_ROOT_TOKEN}}" >> $GITHUB_ENV
+         fi
+
       - uses: actions/checkout@v3
+
+      - name: deploy vault instance
+        uses: sudo-bot/action-docker-compose@latest
+        with:
+          cli-args: "up -d"
+
+      - uses: eLco/setup-vault@v1
+        with:
+          vault_version: 1.8.7
 
       - name: debug
         run: |
           docker ps
           docker images
           docker network ls
+          docker logs workspace-vault-1
+
+      - name: check vault secrets
+        run: |
+          vault secrets list
 
       - uses: hashicorp/setup-terraform@v2
 
-      - id: init
+      - name: init
+        working-directory: tf
         run: |
           terraform init
 
-      - id: plan
+      - name: plan
+        working-directory: tf
         run: |
-          terraform plan -no-color
+          terraform plan -no-color -out=/tmp/tfplan.tfplan
 
-      - id: apply
+      - name: apply
+        working-directory: tf
         run: |
-          terraform apply -auto-approve -no-color ${{ steps.plan.outputs.stdout }}
+          terraform apply -auto-approve -no-color /tmp/tfplan.tfplan
 
-      - run: |
+      - name: debug
+        working-directory: tf
+        run: |
           terraform show
           docker ps
