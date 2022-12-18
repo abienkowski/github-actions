@@ -1,30 +1,27 @@
----
 name: tfsec
-
 on:
   workflow_call:
 
 jobs:
-  defaults:
-    run:
-      working-directory: "tf"
 
   tfsec:
-    runs-on: ubuntu-22.04
+    defaults:
+      run:
+        working-directory: "tf"
     permissions:
       actions: read
       contents: read
       security-events: write
+    runs-on: ubuntu-22.04
 
     steps:
       - uses: actions/checkout@v3
 
-      - name: run tfsec
-        uses: aquasecurity/tfsec-sarif-action@9a83b5c3524f825c020e356335855741fd02745f
+      - uses: aquasecurity/tfsec-sarif-action@9a83b5c3524f825c020e356335855741fd02745f
         with:
           sarif_file: /tmp/tfsec.sarif
 
-      - name: Upload SARIF file
+      - name: upload sarif file
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: /tmp/tfsec.sarif

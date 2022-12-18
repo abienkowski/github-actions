@@ -1,4 +1,3 @@
----
 name: Checkov
 on:
   workflow_call:

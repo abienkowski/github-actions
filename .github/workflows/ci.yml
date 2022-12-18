@@ -1,4 +1,3 @@
----
 name: CI Pipeline
 on:
   pull_request:
@@ -22,4 +21,8 @@ jobs:
     uses: "./.github/workflows/lint.yml"
 
   tfsec:
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
     uses: "./.github/workflows/tfsec.yml"
