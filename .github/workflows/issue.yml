@@ -13,4 +13,4 @@ jobs:
     steps:
       - name: dump event issues
         run: |
-          echo "${{ github.event }}"
+          echo "${{ toJson(github.event) }}"
