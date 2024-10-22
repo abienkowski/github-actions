@@ -1,0 +1,16 @@
+name: dump issue event type
+on:
+  issues:
+    types:
+      - opened
+
+permissions:
+  issues: write
+
+jobs:
+  dump-event-type:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: dump event issues
+        run: |
+          echo "${{ github.event }}"
