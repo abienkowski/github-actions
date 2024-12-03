@@ -1,56 +1,28 @@
-name: Build and Lint
+name: CI Pipeline
 on:
   pull_request:
-    type: [opened, reopened, synchronize]
+    types: [opened, reopened, synchronize]
   push:
     branches:
       - main
     tags:
       - v\d+\.\d+\.\d+
 
-concurrency: 
-  group: ci-${{ github.workflow }}-${{ github.ref }}
+concurrency:
+  group: ci-${{ github.ref }}
   cancel-in-progress: true
-
-env:
-  VAULT_ADDR: "http://localhost:8200"
 
 jobs:
 
   checkov:
-    runs-on: ubuntu-22.04
-
-    steps:
-      - name: checkout repo
-        uses: actions/checkout@v3
-
-      - uses: bridgecrewio/checkov-action@v12
-        name: scan-terraform
-        with:
-          directory: tf/
-          framework: terraform
-          output_format: github_failed_only
-          download_external_modules: true
+    uses: "./.github/workflows/checkov.yml"
 
   lint:
-    defaults:
-      run:
-        working-directory: "${{ github.workspace }}/tf"
-    runs-on: ubuntu-22.04
+    uses: "./.github/workflows/lint.yml"
 
-    steps:
-      - uses: actions/checkout@v3
-
-      - uses: hashicorp/setup-terraform@v2
-
-      - id: init
-        run: |
-          terraform init
-
-      - id: validate
-        run: |
-          terraform validate -no-color
-
-      - id: plan
-        run: |
-          terraform plan -no-color
+  tfsec:
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    uses: "./.github/workflows/tfsec.yml"
